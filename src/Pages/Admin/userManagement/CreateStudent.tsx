@@ -1,20 +1,21 @@
-import { Controller, FieldValues, SubmitHandler } from 'react-hook-form';
+import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
 
-import { Button, Col, Divider, Form, Input, Row } from 'antd';
+import { Button, Col, Divider, Form, Input, Row } from "antd";
 
-import { bloodGroupOptions, genderOptions } from '../../../constants/global';
+import { bloodGroupOptions, genderOptions } from "../../../constants/global";
 
 import {
   useGetAcademicDepartmentsQuery,
   useGetAllSemistersQuery,
-} from '../../../redux/features/admin/academicManagement.api';
-import { useAddStudentMutation } from '../../../redux/features/admin/userManagement.api';
-import PHForm from '../../../Components/Form/PHForm';
-import PHInput from '../../../Components/Form/PHInput';
-import PHSelect from '../../../Components/Form/PHSelect';
-import PHDatePicker from '../../../Components/Form/PHDatePicker';
-import { toast } from 'sonner';
-import { TAcademicSemester, TResponse } from '../../../types';
+} from "../../../redux/features/admin/academicManagement.api";
+import { useAddStudentMutation } from "../../../redux/features/admin/userManagement.api";
+import PHForm from "../../../Components/Form/PHForm";
+import PHInput from "../../../Components/Form/PHInput";
+import PHSelect from "../../../Components/Form/PHSelect";
+import PHDatePicker from "../../../Components/Form/PHDatePicker";
+
+import { toast } from "sonner";
+import { TAcademicSemester, TResponse } from "../../../types";
 
 // const studentDummyData = {
 //   password: 'student123',
@@ -59,53 +60,56 @@ import { TAcademicSemester, TResponse } from '../../../types';
 //! Should be removed
 const studentDefaultValues = {
   name: {
-    firstName: 'I am ',
-    middleName: 'Student',
-    lastName: 'Number 1',
+    firstName: "I am ",
+    middleName: "Student",
+    lastName: "Number 1",
   },
-  gender: 'male',
+  gender: "male",
 
-  bloogGroup: 'A+',
+  bloogGroup: "A+",
 
-  contactNo: '1235678',
-  emergencyContactNo: '987-654-3210',
-  presentAddress: '123 Main St, Cityville',
-  permanentAddress: '456 Oak St, Townsville',
+  contactNo: "1235678",
+  emergencyContactNo: "987-654-3210",
+  presentAddress: "123 Main St, Cityville",
+  permanentAddress: "456 Oak St, Townsville",
 
   guardian: {
-    fatherName: 'James Doe',
-    fatherOccupation: 'Engineer',
-    fatherContactNo: '111-222-3333',
-    motherName: 'Mary Doe',
-    motherOccupation: 'Teacher',
-    motherContactNo: '444-555-6666',
+    fatherName: "James Doe",
+    fatherOccupation: "Engineer",
+    fatherContactNo: "111-222-3333",
+    motherName: "Mary Doe",
+    motherOccupation: "Teacher",
+    motherContactNo: "444-555-6666",
   },
 
   localGuardian: {
-    name: 'Alice Johnson',
-    occupation: 'Doctor',
-    contactNo: '777-888-9999',
-    address: '789 Pine St, Villageton',
+    name: "Alice Johnson",
+    occupation: "Doctor",
+    contactNo: "777-888-9999",
+    address: "789 Pine St, Villageton",
   },
 
   // admissionSemester: '6751bc80d1473b54a4a2d5bd',
- 
+
   // academicDepartment: ' 6763ae172a805dba97db5254',
 };
 
 const CreateStudent = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  
-  const [addStudent
+
+  const [
+    addStudent,
     // { data, error }
-] = useAddStudentMutation();
+  ] = useAddStudentMutation();
 
   // console.log({ data, error });
 
-  const { data: sData, isLoading: sIsLoading } =  useGetAllSemistersQuery(undefined);
-// console.log("semisterData",sData);
-  const { data: dData, isLoading: dIsLoading } =  useGetAcademicDepartmentsQuery(undefined);
-// console.log("department",dData);
+  const { data: sData, isLoading: sIsLoading } =
+    useGetAllSemistersQuery(undefined);
+  // console.log("semisterData",sData);
+  const { data: dData, isLoading: dIsLoading } =
+    useGetAcademicDepartmentsQuery(undefined);
+  // console.log("department",dData);
   const semesterOptions = sData?.data?.map((item) => ({
     value: item._id,
     label: `${item.name} ${item.year}`,
@@ -116,34 +120,34 @@ const CreateStudent = () => {
     label: item.name,
   }));
 
-  const onSubmit: SubmitHandler<FieldValues> =async (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const studentData = {
-      password: 'student123',
+      password: "student123",
       student: data,
     };
-// console.log(data);
-const toastId = toast.loading("Student Creating...")
+    // console.log(data);
+    const toastId = toast.loading("Student Creating...");
     const formData = new FormData();
-try{
-  formData.append('data', JSON.stringify(studentData));
-  formData.append('file', data.profileImg);
+    try {
+      formData.append("data", JSON.stringify(studentData));
+      formData.append("file", data.profileImg);
 
-  // console.log("appended formdata:==> ",JSON.stringify(studentData));
-  const res =await addStudent(formData) as TResponse<TAcademicSemester[]>;
-  if(res?.error){
-    toast.error(res?.error?.data?.message,{id:toastId})
-  }else{
-    toast.success("Student Created",{id:toastId})
-  }
-  //! This is for development
-  //! Just for checking
-  // console.log("appended formdata:==> ",Object.fromEntries(formData));
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-}catch(err){
-  toast.error("Something went wrong",{id:toastId})
-}
-
-
+      // console.log("appended formdata:==> ",JSON.stringify(studentData));
+      const res = (await addStudent(formData)) as TResponse<
+        TAcademicSemester[]
+      >;
+      if (res?.error) {
+        toast.error(res?.error?.data?.message, { id: toastId });
+      } else {
+        toast.success("Student Created", { id: toastId });
+      }
+      //! This is for development
+      //! Just for checking
+      // console.log("appended formdata:==> ",Object.fromEntries(formData));
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      toast.error("Something went wrong", { id: toastId });
+    }
   };
 
   return (
@@ -183,11 +187,10 @@ try{
                       type="file"
                       value={value?.fileName}
                       {...field}
-                      onChange={(e) =>{
+                      onChange={(e) => {
                         // console.log(e.target.files?.[0]);
-                         onChange(e.target.files?.[0])
-                        }}
-                        
+                        onChange(e.target.files?.[0]);
+                      }}
                     />
                   </Form.Item>
                 )}
